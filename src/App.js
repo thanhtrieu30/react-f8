@@ -1,64 +1,40 @@
-import { useState } from "react";
-
-
-
-const courses = [
-  {
-    id: 1,
-    name: 'JS'
-  },
-  {
-    id: 2,
-    name: 'React'
-  },
-  {
-    id: 3,
-    name: 'CSS'
-  },
-]
-
-
-
+import { Fragment } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { publicRoutes } from './routes';
+import { DefaultLayout } from './components/Layout/';
 
 function App() {
-  const [checked , setChecked] = useState([])
+    return (
+        <Router>
+            <div>
+                <Routes>
+                    {publicRoutes.map((route, index) => {
+                        const Page = route.components;
 
+                        let Layout = DefaultLayout;
 
-console.log(checked);
-const handleCheck = (id) => {
-  setChecked(prev => {
-    const isChecked = checked.includes(id)
-    if (isChecked) {
-      return checked.filter(item => item !== id)
-    }else {
-      return [...prev,id]
-    }
-  })
-}
+                        if (route.layout) {
+                            Layout = route.layout;
+                        } else if (route.layout === null) {
+                            Layout = Fragment;
+                        }
 
-const handleSubmit = () => {
-  console.log({id : checked});
-  
-}
-
-  return (
-    <div style={{ padding: 32}}>
-       {courses.map(course => (
-        <div key={course.id}>
-          <input
-           type="checkbox"
-           checked={checked.includes(course.id)}
-           onChange={() => handleCheck(course.id)}
-           />
-           {course.name}
-        </div>
-       )
-
-       )}
-
-        <button onClick={handleSubmit} >Register</button>
-    </div>
-  );
+                        return (
+                            <Route
+                                key={index}
+                                path={route.path}
+                                element={
+                                    <Layout>
+                                        <Page />
+                                    </Layout>
+                                }
+                            />
+                        );
+                    })}
+                </Routes>
+            </div>
+        </Router>
+    );
 }
 
 export default App;
