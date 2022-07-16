@@ -8,6 +8,9 @@ import { Wrapper as PopperWrapper } from '../../../Popper';
 import AccountItem from '../../../AccountItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useEffect, useRef, useState } from 'react';
+import { Debounce } from '../../../../hooks';
+
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
@@ -19,24 +22,31 @@ function Search() {
     const [showResult, setShowResult] = useState(true);
     const [loading, setLoading] = useState(false);
 
+    const debounce = Debounce(searchValue, 500);
+
     useEffect(() => {
-        if (!searchValue.trim()) {
+        if (!debounce.trim()) {
             setRearchResult([]);
             return;
         }
 
         setLoading(true);
 
-        fetch(`https://tiktok.fullstack.edu.vn/api/users/search?q=${encodeURIComponent(searchValue)}&type=more`)
-            .then((res) => res.json())
+        axios
+            .get(`https://tiktok.fullstack.edu.vn/api/users/search`, {
+                params: {
+                    q: debounce,
+                    type: 'less',
+                },
+            })
             .then((res) => {
-                setRearchResult(res.data);
+                setRearchResult(res.data.data);
                 setLoading(false);
             })
             .catch(() => {
                 setLoading(false);
             });
-    }, [searchValue]);
+    }, [debounce]);
 
     const handleHideResult = () => {
         setShowResult(false);

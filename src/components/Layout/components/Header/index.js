@@ -10,22 +10,19 @@ import {
     faEllipsisVertical,
     faGear,
     faKeyboard,
-    faMagnifyingGlass,
     faMessage,
     faSignOut,
-    faSpinner,
     faUser,
 } from '@fortawesome/free-solid-svg-icons';
-import HeadlessTippy from '@tippyjs/react/headless';
 import Tippy from '@tippyjs/react/';
 
 import { useEffect, useState } from 'react';
-import { Wrapper as PopperWrapper } from '../../../Popper';
-import AccountItem from '../../../AccountItem';
 import Button from '../../../Button';
 import Menu from '../../../Popper/Menu';
 import 'tippy.js/dist/tippy.css';
 import Search from '../Search';
+import { Link } from 'react-router-dom';
+import Image from '../../../Image';
 
 const cx = classNames.bind(styles);
 
@@ -113,7 +110,9 @@ function Header() {
         <header className={cx('wrapper')}>
             <div className={cx('inner')}>
                 <div className={cx('logo')}>
-                    <img src={images.logo} alt="tiktok" />
+                    <Link to={'/'} className={cx('logo-link')}>
+                        <img src={images.logo} alt="tiktok" />
+                    </Link>
                 </div>
 
                 {<Search />}
@@ -140,7 +139,7 @@ function Header() {
 
                     <Menu items={currentUser ? userMenu : MENU_ITEM} onChange={handleMenuChange}>
                         {currentUser ? (
-                            <img
+                            <Image
                                 src="https://p16-sign-sg.tiktokcdn.com/aweme/100x100/tos-alisg-avt-0068/02f377b1c4197e3f95035b9995eb7930.jpeg?x-expires=1657774800&x-signature=jnm%2F7vTOXx1f04qB1s1VgyPepDM%3D"
                                 className={cx('user-avatar')}
                                 alt="Beryniceeeee"
